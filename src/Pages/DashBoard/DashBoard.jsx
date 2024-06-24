@@ -82,20 +82,9 @@ const Dashboard = () => {
             <ul className="list-disc pl-5 space-y-1">
               <li>Logged in</li>
               <li>Viewed dashboard</li>
-              {/* Add more recent activities */}
             </ul>
           </div>
-
-          {/* Quick Actions */}
-          <div className="p-6 bg-white rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-2">Quick Actions</h2>
-            <button className="w-full py-2 mb-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Book Appointment</button>
-            <button className="w-full py-2 mb-2 bg-green-500 text-white rounded-lg hover:bg-green-600">Start Video Call</button>
-            <button className="w-full py-2 mb-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">Send Message</button>
-          </div>
         </div>
-
-        {/* More sections as needed */}
       </div>
     </Layout>
   );
