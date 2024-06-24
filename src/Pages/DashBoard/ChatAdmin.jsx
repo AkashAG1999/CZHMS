@@ -98,8 +98,8 @@ function AdminChat() {
     if (!message.trim() || !admin || !selectedUser) return;
 
     const newMessage = {
-      sender: admin._id,
-      receiver: selectedUser._id,
+      sender: admin?._id,
+      receiver: selectedUser?._id,
       message,
       timestamp: new Date().toISOString(),
     };
@@ -160,15 +160,14 @@ function AdminChat() {
                   {messages.map((msg, index) => (
                     <div
                       key={index}
-                      className={`flex ${msg.sender === admin._id ? 'justify-end' : 'justify-start'}`}
-                      
+                      className={`flex ${msg.sender === admin?._id ? 'justify-end' : 'justify-start'}`}
                     >
                       <div
-                        className={`rounded-lg p-4 shadow-md ${msg.sender === admin._id ? 'bg-TopNavBg text-white' : 'bg-white text-gray-800'
+                        className={`rounded-lg p-4 shadow-md ${msg.sender === admin?._id ? 'bg-TopNavBg text-white' : 'bg-white text-gray-800'
                           }`}
-                          style={{
-                            borderRadius: msg.sender === admin._id ? '20px 20px 1px 20px' : '20px 20px 20px 1px',
-                          }}
+                        style={{
+                          borderRadius: msg.sender === admin?._id ? '20px 20px 1px 20px' : '20px 20px 20px 1px',
+                        }}
                       >
                         {msg.message}
                       </div>

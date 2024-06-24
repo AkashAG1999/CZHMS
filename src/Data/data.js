@@ -12,7 +12,7 @@ export const userMenu = [
     {
         name: 'Chats',
         path: '/chat/user',
-        icon: "fa-solid fa-video",
+        icon: "fa-solid fa-comments",
     },
 
 ];
@@ -33,7 +33,7 @@ export const adminMenu = [
     {
         name: 'Chats',
         path: '/chat/admin',
-        icon: "fa-solid fa-video",
+        icon: "fa-solid fa-comments",
     },
     {
         name: 'Tele-Health Meetings',
