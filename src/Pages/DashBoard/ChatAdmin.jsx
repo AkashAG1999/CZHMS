@@ -112,30 +112,29 @@ function AdminChat() {
   return (
     <Layout>
       <div className="flex h-screen shadow-xl rounded-lg border">
-        <div className={`w-full md:w-1/4 bg-gray-700 p-4 overflow-y-auto ${selectedUser ? 'hidden md:block' : ''}`}>
-          <h2 className="text-lg text-white font-semibold mb-4">Chats</h2>
+        <div className={`w-full md:w-1/4 bg-white border-r shadow-xl  p-4 overflow-y-auto ${selectedUser ? 'hidden md:block' : ''}`}>
+          <h2 className="text-lg text-black font-semibold mb-4">Peoples</h2>
           {loading ? (
             <p className="text-blue-500">Loading...</p>
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : (
-            <ul>
+            <ul className="space-y-2 mt-4">
               {users.map((user) => (
                 <li
                   key={user._id}
-                  className={`p-2 rounded-lg cursor-pointer transform transition-transform duration-200 hover:scale-105 ${selectedUser?._id === user._id ? 'bg-TopNavBg' : 'hover:bg-NavBg'
-                    }`}
+                  className={`cursor-pointer p-2 rounded-full ${selectedUser && selectedUser._id === user._id ? 'bg-NavBg text-white' : 'hover:bg-Hover'}`}
                   onClick={() => handleUserSelect(user)}
                 >
                   <div className="flex items-center space-x-4">
                     <div className="flex-shrink-0">
-                      <div className="w-12 h-12 bg-TopNavBg rounded-full flex items-center justify-center text-white text-lg font-semibold">
+                      <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-TopNavBg text-sm font-semibold">
                         {user.name.charAt(0)}
                       </div>
                     </div>
                     <div>
-                      <div className="text-lg font-medium text-white">{user.name}</div>
-                      <div className="text-sm text-gray-300">{user.email}</div>
+                      <div className="text-lg font-medium">{user.name}</div>
+                      <div className="text-xs ">{user.email}</div>
                     </div>
                   </div>
                 </li>
@@ -148,8 +147,9 @@ function AdminChat() {
             <>
               <div className="p-4 bg-TopNavBg flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-white">{selectedUser.name}</h2>
+
                 <button
-                  className="md:hidden text-white"
+                  className="md:hidden bg-white text-xs text-black rounded-3xl px-2 p-2 "
                   onClick={() => setSelectedUser(null)}
                 >
                   Back
@@ -158,18 +158,15 @@ function AdminChat() {
               <div className="flex-1 p-4 overflow-y-auto">
                 <div className="flex flex-col space-y-4">
                   {messages.map((msg, index) => (
-                    <div
-                      key={index}
-                      className={`flex ${msg.sender === admin?._id ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div
-                        className={`rounded-lg p-4 shadow-md ${msg.sender === admin?._id ? 'bg-TopNavBg text-white' : 'bg-white text-gray-800'
-                          }`}
+                    <div key={index} className={`flex ${msg.sender === admin._id ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`max-w-xs p-4 rounded-lg shadow-md ${msg.sender === admin._id ? 'bg-NavBg text-white' : 'bg-white text-gray-800'}`}
                         style={{
                           borderRadius: msg.sender === admin?._id ? '20px 20px 1px 20px' : '20px 20px 20px 1px',
-                        }}
-                      >
-                        {msg.message}
+                        }}>
+                        <p className="text-xs text-gray-500 mb-1">
+                          {msg.sender === admin._id ? 'You' : selectedUser ? selectedUser.name : 'User'} &rarr; {msg.sender === admin._id ? selectedUser.name : 'You'}
+                        </p>
+                        <p className="mb-0">{msg.message}</p>
                       </div>
                     </div>
                   ))}

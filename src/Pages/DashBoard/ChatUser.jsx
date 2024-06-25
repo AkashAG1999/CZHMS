@@ -20,23 +20,12 @@ function UserChat() {
   useEffect(() => {
     fetchAdmin();
     fetchMessages();
+
     socket.on('receiveMessage', handleMessage);
 
     return () => {
       socket.off('receiveMessage', handleMessage);
     };
-  }, []);
-
-  useEffect(() => {
-    const checkAdminLastSeen = () => {
-      const lastSeen = localStorage.getItem('adminLastSeen');
-      setAdminLastSeen(lastSeen ? moment(lastSeen) : null);
-    };
-
-    checkAdminLastSeen();
-    const interval = setInterval(checkAdminLastSeen, 5000);
-
-    return () => clearInterval(interval);
   }, []);
 
   const fetchAdmin = async () => {
@@ -107,7 +96,6 @@ function UserChat() {
   return (
     <Layout>
       <div className="flex flex-col h-screen bg-gray-100 border shadow-xl">
-        {/* Header */}
         <div className="flex justify-between items-center p-4 bg-NavBg text-white shadow-md">
           {loading ? (
             <p className="text-lg">Loading...</p>
@@ -124,21 +112,12 @@ function UserChat() {
             <p className="text-lg">No admin available</p>
           )}
         </div>
-
-        {/* Chat Messages */}
         <div className="flex-1 p-4 overflow-y-auto space-y-4">
           {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={`flex ${msg.sender === user._id ? 'justify-end' : 'justify-start'}`}
-            >
-              <div
-                className={`max-w-xs p-4 rounded-lg shadow-md ${msg.sender === user._id ? 'bg-NavBg text-white' : 'bg-white text-gray-800'
-                  }`}
-                style={{
+            <div key={index} className={`flex ${msg.sender === user._id ? 'justify-end' : 'justify-start'}`}>
+              <div className={`max-w-xs p-4 rounded-lg shadow-md ${msg.sender === user._id ? 'bg-NavBg text-white' : 'bg-white text-gray-800'}`} style={{
                   borderRadius: msg.sender === user._id ? '20px 20px 1px 20px' : '20px 20px 20px 1px',
-                }}
-              >
+                }}>
                 <p className="text-xs text-gray-500 mb-1">
                   {msg.sender === user._id ? 'You' : admin ? admin.name : 'Admin'} &rarr; {msg.sender === user._id ? 'Admin' : 'You'}
                 </p>
@@ -147,23 +126,10 @@ function UserChat() {
             </div>
           ))}
         </div>
-
-        {/* Message Input */}
         <div className="p-4 bg-white flex items-center space-x-4 border-t shadow-md">
-          <input
-            ref={messageInputRef}
-            type="text"
-            placeholder="Type your message..."
-            className="flex-1 p-2 border rounded-full"
-          />
-          <button className="bg-NavBg text-white px-4 py-2 rounded hover:bg-TopNavBg flex items-center">
-            <FaPaperclip />
-          </button>
-          <button
-            className="bg-NavBg text-white px-4 py-2 rounded hover:bg-TopNavBg flex items-center"
-            onClick={sendMessage}>
-            <FaPaperPlane />
-          </button>
+          <input ref={messageInputRef} type="text" placeholder="Type your message..." className="flex-1 p-2 border rounded-full" />
+          <button className="bg-NavBg text-white px-4 py-2 rounded hover:bg-TopNavBg flex items-center"><FaPaperclip /></button>
+          <button className="bg-NavBg text-white px-4 py-2 rounded hover:bg-TopNavBg flex items-center" onClick={sendMessage}><FaPaperPlane /></button>
         </div>
       </div>
     </Layout>
