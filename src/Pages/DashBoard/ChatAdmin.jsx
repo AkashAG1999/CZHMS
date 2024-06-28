@@ -270,5 +270,4 @@ function AdminChat() {
     </Layout>
   );
 }
-
 export default AdminChat;
