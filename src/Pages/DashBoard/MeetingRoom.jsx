@@ -16,7 +16,7 @@ export function getUrlParams(url = window.location.href) {
   return new URLSearchParams(urlStr);
 }
 
-const MeetingRoom = () => {
+const MeetingRoom = ({ adminName }) => {
   const roomID = useRef(getUrlParams().get('roomID') || localStorage.getItem('roomID') || randomID(5));
 
   useEffect(() => {
@@ -53,11 +53,9 @@ const MeetingRoom = () => {
   };
 
   return (
-    <div
-      className="myCallContainer"
-      ref={myMeeting}
-      style={{ width: '100vw', height: '100vh' }}
-    ></div>
+    <div className="myCallContainer" ref={myMeeting} style={{ width: '100vw', height: '100vh' }}>
+      <h1 className="text-2xl font-semibold mb-4">Meeting with {adminName}</h1>
+    </div>
   );
 };
 

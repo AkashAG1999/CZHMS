@@ -93,6 +93,21 @@ function UserChat() {
     return moment().diff(adminLastSeen, 'seconds') < 10;
   };
 
+  const renderMessageContent = (content) => {
+    // Regex to detect URLs in the message content
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = content.split(urlRegex);
+    return parts.map((part, index) =>
+      urlRegex.test(part) ? (
+        <a key={index} href={part} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+          {part}
+        </a>
+      ) : (
+        <span key={index}>{part}</span>
+      )
+    );
+  };
+
   return (
     <Layout>
       <div className="flex flex-col h-screen bg-gray-100 border shadow-xl">
@@ -121,7 +136,7 @@ function UserChat() {
                 <p className="text-xs text-gray-500 mb-1">
                   {msg.sender === user._id ? 'You' : admin ? admin.name : 'Admin'} &rarr; {msg.sender === user._id ? 'Admin' : 'You'}
                 </p>
-                <p className="mb-0">{msg.message}</p>
+                <p className="mb-0">{renderMessageContent(msg.message)}</p>
               </div>
             </div>
           ))}

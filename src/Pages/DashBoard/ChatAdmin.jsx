@@ -13,6 +13,7 @@ function AdminChat() {
   const [error, setError] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
   const messageInputRef = useRef(null);
   const admin = useSelector((state) => state.user.user);
 
@@ -109,10 +110,57 @@ function AdminChat() {
     messageInputRef.current.value = '';
   };
 
+  const handleInvite = () => {
+    const roomID = generateRandomID(5);
+    const meetingURL = `${window.location.protocol}//${window.location.host}/cz/meetings/meeting-room?roomID=${roomID}`;
+    socket.emit('initiateVideoCall', { from: admin._id, to: selectedUser._id, roomID });
+
+    // Automatically send meeting link to selected user
+    const message = `Hey ${selectedUser.name}, join the meeting here: ${meetingURL}`;
+    const newMessage = {
+      sender: admin?._id,
+      receiver: selectedUser?._id,
+      message,
+      timestamp: new Date().toISOString(),
+    };
+
+    socket.emit('sendMessage', newMessage);
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+    // Open meeting URL in a new tab
+    window.open(meetingURL, '_blank');
+    setShowPopup(false);
+  };
+
+  const generateRandomID = (len) => {
+    let result = '';
+    const chars = '12345qwertyuiopasdfgh67890jklmnbvcxzMNBVCZXASDQWERTYHGFUIOLKJP';
+    const maxPos = chars.length;
+    for (let i = 0; i < len; i++) {
+      result += chars.charAt(Math.floor(Math.random() * maxPos));
+    }
+    return result;
+  };
+
+  const renderMessageContent = (content) => {
+    // Regex to detect URLs in the message content
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = content.split(urlRegex);
+    return parts.map((part, index) =>
+      urlRegex.test(part) ? (
+        <a key={index} href={part} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+          {part}
+        </a>
+      ) : (
+        <span key={index}>{part}</span>
+      )
+    );
+  };
+
   return (
     <Layout>
       <div className="flex h-screen shadow-xl rounded-lg border">
-        <div className={`w-full md:w-1/4 bg-white border-r shadow-xl  p-4 overflow-y-auto ${selectedUser ? 'hidden md:block' : ''}`}>
+        <div className={`w-full md:w-1/4 bg-white border-r shadow-xl p-4 overflow-y-auto ${selectedUser ? 'hidden md:block' : ''}`}>
           <h2 className="text-lg text-black font-semibold mb-4">Peoples</h2>
           {loading ? (
             <p className="text-blue-500">Loading...</p>
@@ -134,7 +182,7 @@ function AdminChat() {
                     </div>
                     <div>
                       <div className="text-lg font-medium">{user.name}</div>
-                      <div className="text-xs ">{user.email}</div>
+                      <div className="text-xs">{user.email}</div>
                     </div>
                   </div>
                 </li>
@@ -149,10 +197,16 @@ function AdminChat() {
                 <h2 className="text-lg font-semibold text-white">{selectedUser.name}</h2>
 
                 <button
-                  className="md:hidden bg-white text-xs text-black rounded-3xl px-2 p-2 "
+                  className="md:hidden bg-white text-xs text-black rounded-3xl px-2 p-2"
                   onClick={() => setSelectedUser(null)}
                 >
                   Back
+                </button>
+                <button
+                  className="bg-white text-xs text-black rounded-3xl px-2 p-2 ml-2"
+                  onClick={() => setShowPopup(true)}
+                >
+                  Invite to Meeting
                 </button>
               </div>
               <div className="flex-1 p-4 overflow-y-auto">
@@ -166,7 +220,7 @@ function AdminChat() {
                         <p className="text-xs text-gray-500 mb-1">
                           {msg.sender === admin._id ? 'You' : selectedUser ? selectedUser.name : 'User'} &rarr; {msg.sender === admin._id ? selectedUser.name : 'You'}
                         </p>
-                        <p className="mb-0">{msg.message}</p>
+                        <p className="mb-0">{renderMessageContent(msg.message)}</p>
                       </div>
                     </div>
                   ))}
@@ -181,19 +235,38 @@ function AdminChat() {
                 />
                 <button
                   className="bg-TopNavBg text-white px-4 py-2 rounded-r-full hover:bg-NavBg flex items-center"
-                  onClick={sendMessage}
-                >
+                  onClick={sendMessage}>
                   <FaPaperPlane className="mr-2" /> Send
                 </button>
               </div>
             </>
           ) : (
-            <div className="flex-1 flex items-center justify-center">
-              <p className="text-lg font-semibold text-gray-500">Select a user to start chatting</p>
+            <div className="flex items-center justify-center h-full">
+              <p className="text-lg text-gray-600">Select a user to start chatting</p>
             </div>
           )}
         </div>
       </div>
+      {showPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-xl">
+            <p className="text-lg font-semibold mb-4">Send Meeting Invitation</p>
+            <p className="mb-4">Are you sure you want to send a meeting invitation to {selectedUser?.name}?</p>
+            <div className="flex justify-end space-x-4">
+              <button
+                className="bg-TopNavBg text-white px-4 py-2 rounded-lg hover:bg-Hover focus:outline-none focus:ring focus:border-blue-300"
+                onClick={handleInvite}>
+                Send Invite
+              </button>
+              <button
+                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring focus:border-blue-300"
+                onClick={() => setShowPopup(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }
