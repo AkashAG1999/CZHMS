@@ -35,11 +35,6 @@ export const adminMenu = [
         path: '/chat/admin',
         icon: "fa-solid fa-comments",
     },
-    {
-        name: 'Tele-Health Meetings',
-        path: '/cz/meetings',
-        icon: "fa-solid fa-video",
-    },
 
 
 ];

@@ -254,12 +254,12 @@ function AdminChat() {
             <p className="mb-4">Are you sure you want to send a meeting invitation to {selectedUser?.name}?</p>
             <div className="flex justify-end space-x-4">
               <button
-                className="bg-TopNavBg text-white px-4 py-2 rounded-lg hover:bg-Hover focus:outline-none focus:ring focus:border-blue-300"
+                className="bg-TopNavBg text-white px-4 py-2 rounded-full hover:bg-Hover focus:outline-none focus:ring focus:border-blue-300"
                 onClick={handleInvite}>
-                Send Invite
+                Invite
               </button>
               <button
-                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring focus:border-blue-300"
+                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-400 focus:outline-none focus:ring focus:border-blue-300"
                 onClick={() => setShowPopup(false)}>
                 Cancel
               </button>
