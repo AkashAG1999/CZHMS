@@ -14,6 +14,7 @@ function AdminChat() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const messageInputRef = useRef(null);
   const admin = useSelector((state) => state.user.user);
 
@@ -157,18 +158,43 @@ function AdminChat() {
     );
   };
 
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Layout>
       <div className="flex h-screen shadow-xl rounded-lg border">
         <div className={`w-full md:w-1/4 bg-white border-r shadow-xl p-4 overflow-y-auto ${selectedUser ? 'hidden md:block' : ''}`}>
-          <h2 className="text-lg text-black font-semibold mb-4">Peoples</h2>
+          <div className="mb-4">
+            <div className="flex items-center space-x-4 mb-4">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-TopNavBg text-sm font-semibold">
+                  {admin?.name?.charAt(0)}
+                </div>
+              </div>
+              <div>
+                <div className="text-lg font-medium">{admin?.name}</div>
+                <div className="text-xs">{admin?.email}</div>
+              </div>
+            </div>
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-4 py-2 border rounded-full focus:outline-none"
+            />
+            
+          </div>
           {loading ? (
             <p className="text-blue-500">Loading...</p>
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : (
             <ul className="space-y-2 mt-4">
-              {users.map((user) => (
+              <h2 className="text-lg text-black font-semibold mb-4">Peoples</h2>
+              {filteredUsers.map((user) => (
                 <li
                   key={user._id}
                   className={`cursor-pointer p-2 rounded-full ${selectedUser && selectedUser._id === user._id ? 'bg-NavBg text-white' : 'hover:bg-Hover'}`}
@@ -195,7 +221,6 @@ function AdminChat() {
             <>
               <div className="p-4 bg-TopNavBg flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-white">{selectedUser.name}</h2>
-
                 <button
                   className="md:hidden bg-white text-xs text-black rounded-3xl px-2 p-2"
                   onClick={() => setSelectedUser(null)}
@@ -211,57 +236,65 @@ function AdminChat() {
               </div>
               <div className="flex-1 p-4 overflow-y-auto">
                 <div className="flex flex-col space-y-4">
-                  {messages.map((msg, index) => (
-                    <div key={index} className={`flex ${msg.sender === admin._id ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-xs p-4 rounded-lg shadow-md ${msg.sender === admin._id ? 'bg-NavBg text-white' : 'bg-white text-gray-800'}`}
-                        style={{
-                          borderRadius: msg.sender === admin?._id ? '20px 20px 1px 20px' : '20px 20px 20px 1px',
-                        }}>
-                        <p className="text-xs text-gray-500 mb-1">
-                          {msg.sender === admin._id ? 'You' : selectedUser ? selectedUser.name : 'User'} &rarr; {msg.sender === admin._id ? selectedUser.name : 'You'}
-                        </p>
-                        <p className="mb-0">{renderMessageContent(msg.message)}</p>
-                      </div>
-                    </div>
-                  ))}
+                {messages.map((msg, index) => (
+              <div key={index} className={`flex ${msg.sender === admin?._id ? 'justify-end' : 'justify-start'}`}>
+                <div
+                  className={`max-w-xs p-4 rounded-lg shadow-md ${msg.sender === admin?._id ? 'bg-NavBg text-white' : 'bg-white text-gray-800'}`}
+                  style={{
+                    borderRadius: msg.sender === admin?._id ? '20px 20px 1px 20px' : '20px 20px 20px 1px',
+                  }}
+                >
+                  <p className="text-xs text-gray-500 mb-1">
+                    {msg.sender === admin?._id ? 'You' : selectedUser ? selectedUser.name : 'User'} &rarr; {msg.sender === admin?._id ? selectedUser.name : 'You'}
+                  </p>
+                  {renderMessageContent(msg.message)}
                 </div>
               </div>
-              <div className="p-4 bg-white flex items-center">
-                <input
-                  type="text"
-                  ref={messageInputRef}
-                  placeholder="Type your message..."
-                  className="flex-1 px-4 py-2 rounded-l-full border border-gray-300 focus:outline-none"
-                />
-                <button
-                  className="bg-TopNavBg text-white px-4 py-2 rounded-r-full hover:bg-NavBg flex items-center"
-                  onClick={sendMessage}>
-                  <FaPaperPlane className="mr-2" /> Send
-                </button>
+            ))}
+
+                </div>
+              </div>
+              <div className="p-4 bg-gray-200">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="text"
+                    ref={messageInputRef}
+                    placeholder="Type your message here..."
+                    className="w-full px-4 py-2 border rounded-full focus:outline-none"
+                  />
+                  <button
+                    className="bg-NavBg text-white rounded-full p-2"
+                    onClick={sendMessage}
+                  >
+                    <FaPaperPlane />
+                  </button>
+                </div>
               </div>
             </>
           ) : (
-            <div className="flex items-center justify-center h-full">
-              <p className="text-lg text-gray-600">Select a user to start chatting</p>
+            <div className="flex-1 flex items-center justify-center text-lg text-gray-500">
+              Select a user to start a conversation
             </div>
           )}
         </div>
       </div>
       {showPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-8 rounded-lg shadow-xl">
-            <p className="text-lg font-semibold mb-4">Send Meeting Invitation</p>
-            <p className="mb-4">Are you sure you want to send a meeting invitation to {selectedUser?.name}?</p>
-            <div className="flex justify-end space-x-4">
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-4 rounded-lg shadow-lg">
+            <h2 className="text-lg font-semibold mb-4">Start Video Call</h2>
+            <p>Do you want to invite {selectedUser.name} to a video call?</p>
+            <div className="mt-4 flex justify-end space-x-2">
               <button
-                className="bg-TopNavBg text-white px-4 py-2 rounded-full hover:bg-Hover focus:outline-none focus:ring focus:border-blue-300"
-                onClick={handleInvite}>
-                Invite
+                className="bg-gray-200 text-black px-4 py-2 rounded"
+                onClick={() => setShowPopup(false)}
+              >
+                Cancel
               </button>
               <button
-                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-400 focus:outline-none focus:ring focus:border-blue-300"
-                onClick={() => setShowPopup(false)}>
-                Cancel
+                className="bg-NavBg text-white px-4 py-2 rounded"
+                onClick={handleInvite}
+              >
+                Invite
               </button>
             </div>
           </div>
@@ -270,4 +303,5 @@ function AdminChat() {
     </Layout>
   );
 }
+
 export default AdminChat;
