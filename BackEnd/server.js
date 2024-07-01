@@ -41,7 +41,7 @@ io.on("connection", (socket) => {
     console.log(`Message from ${data.sender} to ${data.receiver}: ${data.message}`);
     try {
       // Replace "admin" Replace admin ID
-      const adminId = "6673bd0a976c1a27d7122e15";
+      const adminId = "66828222340e38c80c02bbae";
       if (data.sender === "admin") {
         data.sender = adminId;
       }

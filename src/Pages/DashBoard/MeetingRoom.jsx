@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
+import { useSelector } from 'react-redux';
 
 function randomID(len) {
   let result = '';
@@ -16,16 +17,18 @@ export function getUrlParams(url = window.location.href) {
   return new URLSearchParams(urlStr);
 }
 
-const MeetingRoom = ({ adminName }) => {
+const MeetingRoom = () => {
   const roomID = useRef(getUrlParams().get('roomID') || localStorage.getItem('roomID') || randomID(5));
+  const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
     localStorage.setItem('roomID', roomID.current);
-  }, []);
+    if (user) {
+      initiateMeeting(user.isAdmin ? user.name : user.name);
+    }
+  }, [user]);
 
-  const myMeeting = async (element) => {
-    if (!element) return;
-
+  const initiateMeeting = async (userName) => {
     const appID = 1057413900;
     const serverSecret = '7b2e7f0752aaac1167e029dd171b2bbc';
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
@@ -33,13 +36,13 @@ const MeetingRoom = ({ adminName }) => {
       serverSecret,
       roomID.current,
       randomID(5),
-      randomID(5)
+      userName
     );
 
     const zp = ZegoUIKitPrebuilt.create(kitToken);
 
     zp.joinRoom({
-      container: element,
+      container: document.querySelector('.myCallContainer'),
       sharedLinks: [
         {
           name: 'Copy link',
@@ -52,11 +55,7 @@ const MeetingRoom = ({ adminName }) => {
     });
   };
 
-  return (
-    <div className="myCallContainer" ref={myMeeting} style={{ width: '100vw', height: '100vh' }}>
-      <h1 className="text-2xl font-semibold mb-4">Meeting with {adminName}</h1>
-    </div>
-  );
+  return <div className="myCallContainer" style={{ width: '100vw', height: '100vh' }}></div>;
 };
 
 export default MeetingRoom;

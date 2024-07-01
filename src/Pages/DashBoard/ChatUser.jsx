@@ -19,14 +19,17 @@ function UserChat() {
 
   useEffect(() => {
     fetchAdmin();
-    fetchMessages();
+
+    if (user) {
+      fetchMessages();
+    }
 
     socket.on('receiveMessage', handleMessage);
 
     return () => {
       socket.off('receiveMessage', handleMessage);
     };
-  }, []);
+  }, [user]);
 
   const fetchAdmin = async () => {
     try {

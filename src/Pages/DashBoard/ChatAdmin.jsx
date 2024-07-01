@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { FaPaperPlane } from 'react-icons/fa';
+import { FaPaperPlane , FaVideo} from 'react-icons/fa';
+import { IoMdArrowBack } from "react-icons/io";
 import Layout from './Layout';
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
@@ -167,7 +168,7 @@ function AdminChat() {
       <div className="flex h-screen shadow-xl rounded-lg border">
         <div className={`w-full md:w-1/4 bg-white border-r shadow-xl p-4 overflow-y-auto ${selectedUser ? 'hidden md:block' : ''}`}>
           <div className="mb-4">
-            <div className="flex items-center space-x-4 mb-4">
+            <div className="flex items-center space-x-4 mb-4 ">
               <div className="flex-shrink-0">
                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-TopNavBg text-sm font-semibold">
                   {admin?.name?.charAt(0)}
@@ -175,7 +176,6 @@ function AdminChat() {
               </div>
               <div>
                 <div className="text-lg font-medium">{admin?.name}</div>
-                <div className="text-xs">{admin?.email}</div>
               </div>
             </div>
             <input
@@ -220,18 +220,18 @@ function AdminChat() {
           {selectedUser ? (
             <>
               <div className="p-4 bg-TopNavBg flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-white">{selectedUser.name}</h2>
                 <button
                   className="md:hidden bg-white text-xs text-black rounded-3xl px-2 p-2"
                   onClick={() => setSelectedUser(null)}
                 >
-                  Back
+                  < IoMdArrowBack />
                 </button>
+                <h2 className="text-lg font-semibold text-white">{selectedUser.name}</h2>
                 <button
                   className="bg-white text-xs text-black rounded-3xl px-2 p-2 ml-2"
                   onClick={() => setShowPopup(true)}
                 >
-                  Invite to Meeting
+                 <FaVideo />
                 </button>
               </div>
               <div className="flex-1 p-4 overflow-y-auto">

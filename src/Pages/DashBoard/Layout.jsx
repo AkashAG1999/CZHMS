@@ -68,9 +68,12 @@ const Layout = ({ children }) => {
                     <div key={idx} className="mr-4">
                       <Link
                         to={menu.path}
-                        className={`text-gray-700 hover:text-Hover ${isActive ? 'font-semibold' : ''}`}
+                        className={`text-TopNavBg hover:text-Hover relative ${isActive ? 'font-semibold'  : ''}`}
                       >
                         {menu.name}
+                        {isActive && (
+                          <span className="absolute left-0 bottom-0 h-0.5 bg-TopNavBg w-full transform translate-y-1 transition-transform duration-300"></span>
+                        )}
                       </Link>
                     </div>
                   );

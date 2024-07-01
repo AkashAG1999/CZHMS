@@ -135,7 +135,7 @@ const sendMessage = async (req, res) => {
 const getMessages = async (req, res) => {
   try {
     const { userId } = req.params;
-    const adminId = '6673bd0a976c1a27d7122e15'; // Use actual admin ID
+    const adminId = '66828222340e38c80c02bbae'; // Use actual admin ID
 
     const user = await userModel.findById(userId).select('-password');
     if (!user) {
