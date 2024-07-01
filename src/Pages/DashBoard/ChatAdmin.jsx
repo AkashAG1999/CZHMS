@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { FaPaperPlane , FaVideo} from 'react-icons/fa';
+import { FaPaperPlane, FaVideo } from 'react-icons/fa';
 import { IoMdArrowBack } from "react-icons/io";
 import Layout from './Layout';
 import io from 'socket.io-client';
@@ -185,7 +185,7 @@ function AdminChat() {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-4 py-2 border rounded-full focus:outline-none"
             />
-            
+
           </div>
           {loading ? (
             <p className="text-blue-500">Loading...</p>
@@ -231,27 +231,26 @@ function AdminChat() {
                   className="bg-white text-xs text-black rounded-3xl px-2 p-2 ml-2"
                   onClick={() => setShowPopup(true)}
                 >
-                 <FaVideo />
+                  <FaVideo />
                 </button>
               </div>
               <div className="flex-1 p-4 overflow-y-auto">
                 <div className="flex flex-col space-y-4">
-                {messages.map((msg, index) => (
-              <div key={index} className={`flex ${msg.sender === admin?._id ? 'justify-end' : 'justify-start'}`}>
-                <div
-                  className={`max-w-xs p-4 rounded-lg shadow-md ${msg.sender === admin?._id ? 'bg-NavBg text-white' : 'bg-white text-gray-800'}`}
-                  style={{
-                    borderRadius: msg.sender === admin?._id ? '20px 20px 1px 20px' : '20px 20px 20px 1px',
-                  }}
-                >
-                  <p className="text-xs text-gray-500 mb-1">
-                    {msg.sender === admin?._id ? 'You' : selectedUser ? selectedUser.name : 'User'} &rarr; {msg.sender === admin?._id ? selectedUser.name : 'You'}
-                  </p>
-                  {renderMessageContent(msg.message)}
-                </div>
-              </div>
-            ))}
-
+                  {messages.map((msg, index) => (
+                    <div key={index} className={`flex ${msg.sender === admin?._id ? 'justify-end' : 'justify-start'}`}>
+                      <div
+                        className={`max-w-xs p-4 rounded-lg shadow-md ${msg.sender === admin?._id ? 'bg-NavBg text-white' : 'bg-white text-gray-800'}`}
+                        style={{
+                          borderRadius: msg.sender === admin?._id ? '20px 20px 1px 20px' : '20px 20px 20px 1px',
+                        }}
+                      >
+                        <p className="text-xs text-gray-500 mb-1">
+                          {msg.sender === admin?._id ? 'You' : selectedUser ? selectedUser.name : 'User'} &rarr; {msg.sender === admin?._id ? selectedUser.name : 'You'}
+                        </p>
+                        {renderMessageContent(msg.message)}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="p-4 bg-gray-200">

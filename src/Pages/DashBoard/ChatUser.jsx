@@ -134,8 +134,8 @@ function UserChat() {
           {messages.map((msg, index) => (
             <div key={index} className={`flex ${msg.sender === user._id ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-xs p-4 rounded-lg shadow-md ${msg.sender === user._id ? 'bg-NavBg text-white' : 'bg-white text-gray-800'}`} style={{
-                  borderRadius: msg.sender === user._id ? '20px 20px 1px 20px' : '20px 20px 20px 1px',
-                }}>
+                borderRadius: msg.sender === user._id ? '20px 20px 1px 20px' : '20px 20px 20px 1px',
+              }}>
                 <p className="text-xs text-gray-500 mb-1">
                   {msg.sender === user._id ? 'You' : admin ? admin.name : 'Admin'} &rarr; {msg.sender === user._id ? 'Admin' : 'You'}
                 </p>
